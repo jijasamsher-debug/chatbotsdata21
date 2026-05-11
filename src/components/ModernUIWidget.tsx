@@ -538,8 +538,8 @@ export const ModernUIWidget = ({ bot, owner }: ModernUIWidgetProps) => {
         onClick={openWidget}
         style={{
           position: 'fixed',
-          bottom: '19px',
-          right: '20px',
+          bottom: '24px',
+          right: '24px',
           width: '72px',
           height: '72px',
           border: 'none',
