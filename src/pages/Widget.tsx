@@ -437,10 +437,10 @@ export const Widget = () => {
       {!isOpen ? (
         <button
           onClick={openWidget}
-          className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 overflow-hidden"
-          style={{ backgroundColor: config.theme.primaryColor }}
+className="fixed bottom-6 right-6 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 overflow-hidden"
+          style={{ backgroundColor: config.theme.primaryColor, width: '72px', height: '72px' }}
         >
-          <img src={floodLogo} alt="Chat" className="w-10 h-10 object-contain" />
+          <img src={floodLogo} alt="Chat" className="w-12 h-12 object-contain" />
         </button>
       ) : (
         <div
