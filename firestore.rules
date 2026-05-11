@@ -1,0 +1,122 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function userProfile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function userPlan() {
+      return userProfile().subscription != null && userProfile().subscription.plan != null
+        ? userProfile().subscription.plan
+        : userProfile().plan;
+    }
+
+    function isFreePlan() {
+      return userPlan() == null || userPlan() == 'free';
+    }
+
+    function isAffiliate() {
+      return isAuthenticated() && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'affiliate' ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+    }
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow write: if isOwner(userId) || isAdmin();
+    }
+
+    match /bots/{botId} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated() && (resource.data.ownerId == request.auth.uid || isAdmin());
+    }
+
+    match /leads/{leadId} {
+      allow read: if isAdmin() || (
+        isAuthenticated() &&
+        resource.data.ownerId == request.auth.uid &&
+        (
+          !isFreePlan() ||
+          userProfile().freeLeadVisibleUntil == null ||
+          resource.data.collectedAt <= userProfile().freeLeadVisibleUntil
+        )
+      );
+      allow create: if true;
+      allow update: if isAdmin();
+      allow delete: if isAuthenticated() && (resource.data.ownerId == request.auth.uid || isAdmin());
+    }
+
+    match /knowledgeBases/{kbId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated() && (resource.data.ownerId == request.auth.uid || isAdmin());
+    }
+
+    match /payments/{paymentId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow write: if false;
+    }
+
+    match /blogPosts/{postId} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /landingPages/{pageId} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /affiliates/{affiliateId} {
+      allow read: if isOwner(affiliateId) || isAdmin();
+      allow update: if isAdmin();
+      allow create: if isAdmin();
+    }
+
+    match /affiliateApplications/{applicationId} {
+      allow create: if true;
+      allow read: if isAdmin();
+      allow update: if isAdmin();
+    }
+
+    match /affiliateCommissions/{commissionId} {
+      allow read: if isAuthenticated() && (resource.data.affiliateId == request.auth.uid || isAdmin());
+      allow write: if false;
+    }
+
+    match /affiliatePayoutRequests/{requestId} {
+      allow create: if isAuthenticated() && isAffiliate();
+      allow read: if isAuthenticated() && (resource.data.affiliateId == request.auth.uid || isAdmin());
+      allow update: if isAdmin();
+    }
+
+    match /affiliateResources/{resourceId} {
+      allow read: if isAffiliate() || (resource.data.assignedTo == 'all' || request.auth.uid in resource.data.assignedTo);
+      allow write: if isAdmin();
+    }
+
+    match /contactMessages/{messageId} {
+      allow create: if true;
+      allow read: if isAdmin();
+    }
+
+    match /adminSettings/{settingId} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+  }
+}

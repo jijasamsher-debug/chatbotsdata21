@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+  }
+
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 202 72% 59%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 209 74% 54%;
+    --primary-strong: 218 70% 48%;
+    --primary-deep: 218 70% 38%;
+    --primary-soft: 198 68% 64%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --border: 214 32% 91%;
+  }
+
+  .dark {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 209 74% 54%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 202 72% 59%;
+    --primary-strong: 218 70% 48%;
+    --primary-deep: 218 70% 38%;
+    --primary-soft: 198 68% 64%;
+    --muted: 217 33% 14%;
+    --muted-foreground: 215 20% 65%;
+    --border: 217 33% 18%;
+  }
+}
+
+@layer components {
+  .public-page-bg {
+    @apply min-h-screen bg-gradient-to-b from-blue-50/70 via-white to-blue-100/60 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950;
+  }
+
+  .public-hero {
+    @apply relative overflow-hidden rounded-3xl border border-white/60 dark:border-gray-700/70 bg-white/70 dark:bg-gray-900/60 backdrop-blur-xl shadow-xl shadow-blue-100/40 dark:shadow-black/30;
+  }
+
+  .modern-glass-card {
+    @apply rounded-2xl border border-white/60 dark:border-gray-700/70 bg-white/80 dark:bg-gray-900/65 backdrop-blur-xl shadow-lg shadow-blue-100/35 dark:shadow-black/25;
+  }
+}
