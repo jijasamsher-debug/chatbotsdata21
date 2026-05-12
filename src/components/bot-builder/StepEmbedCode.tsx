@@ -13,17 +13,75 @@ export const StepEmbedCode = ({ botId }: StepEmbedCodeProps) => {
   const widgetUrl = `${window.location.origin}/widget/${botId}`;
 
   const iframeCode = `<iframe
+  id="flood-chat-widget"
   src="${widgetUrl}"
-  style="position: fixed; bottom: 20px; right: 20px; width: 400px; height: 600px; border: none; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 999999;"
-></iframe>`;
+  allow="clipboard-write"
+  style="position:fixed;bottom:20px;right:20px;width:110px;height:110px;max-width:calc(100vw - 40px);max-height:calc(100vh - 40px);border:none;background:transparent;color-scheme:normal;z-index:999999;transition:width .25s ease,height .25s ease;"
+></iframe>
+<script>
+(function(){
+  var f=document.getElementById('flood-chat-widget');
+  function size(s){
+    var open=s==='open', popup=s==='popup';
+    var mobile=window.innerWidth<480;
+    if(open){
+      f.style.width=mobile?'calc(100vw - 24px)':'400px';
+      f.style.height=mobile?'calc(100vh - 24px)':'620px';
+      f.style.bottom=mobile?'12px':'20px';
+      f.style.right=mobile?'12px':'20px';
+    } else if(popup){
+      f.style.width='320px';
+      f.style.height='200px';
+      f.style.bottom='20px';
+      f.style.right='20px';
+    } else {
+      f.style.width='110px';
+      f.style.height='110px';
+      f.style.bottom='20px';
+      f.style.right='20px';
+    }
+  }
+  window.addEventListener('message',function(e){
+    var d=e.data; if(!d||d.source!=='flood-chat')return;
+    if(d.type==='resize') size(d.state);
+  });
+  window.addEventListener('resize',function(){ /* re-evaluate on rotate */ });
+})();
+</script>`;
 
   const scriptCode = `<script>
-  (function() {
-    var iframe = document.createElement('iframe');
-    iframe.src = '${widgetUrl}';
-    iframe.style.cssText = 'position:fixed;bottom:20px;right:20px;width:400px;height:600px;border:none;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.15);z-index:999999;';
-    document.body.appendChild(iframe);
-  })();
+(function(){
+  var f=document.createElement('iframe');
+  f.id='flood-chat-widget';
+  f.src='${widgetUrl}';
+  f.allow='clipboard-write';
+  f.style.cssText='position:fixed;bottom:20px;right:20px;width:110px;height:110px;max-width:calc(100vw - 40px);max-height:calc(100vh - 40px);border:none;background:transparent;color-scheme:normal;z-index:999999;transition:width .25s ease,height .25s ease;';
+  document.body.appendChild(f);
+  function size(s){
+    var open=s==='open', popup=s==='popup';
+    var mobile=window.innerWidth<480;
+    if(open){
+      f.style.width=mobile?'calc(100vw - 24px)':'400px';
+      f.style.height=mobile?'calc(100vh - 24px)':'620px';
+      f.style.bottom=mobile?'12px':'20px';
+      f.style.right=mobile?'12px':'20px';
+    } else if(popup){
+      f.style.width='320px';
+      f.style.height='200px';
+      f.style.bottom='20px';
+      f.style.right='20px';
+    } else {
+      f.style.width='110px';
+      f.style.height='110px';
+      f.style.bottom='20px';
+      f.style.right='20px';
+    }
+  }
+  window.addEventListener('message',function(e){
+    var d=e.data; if(!d||d.source!=='flood-chat')return;
+    if(d.type==='resize') size(d.state);
+  });
+})();
 </script>`;
 
   const copyToClipboard = (text: string, type: 'iframe' | 'script' | 'url') => {
