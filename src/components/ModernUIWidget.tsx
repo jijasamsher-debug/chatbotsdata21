@@ -549,7 +549,10 @@ export const ModernUIWidget = ({ bot, owner }: ModernUIWidgetProps) => {
           borderRadius: '50%',
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
           zIndex: 999,
-          display: isOpen ? 'none' : 'block'
+          display: isOpen ? 'none' : 'block',
+          outline: 'none',
+          WebkitAppearance: 'none',
+          appearance: 'none' as const
         }}
       >
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -602,7 +605,7 @@ export const ModernUIWidget = ({ bot, owner }: ModernUIWidgetProps) => {
             style={{
               display: 'flex',
               alignItems: 'center',
-              background: theme.primaryColor,
+              background: theme.primaryColor || '#4CAF50',
               color: 'white',
               padding: '8px 12px'
             }}
@@ -635,7 +638,11 @@ export const ModernUIWidget = ({ bot, owner }: ModernUIWidgetProps) => {
                 color: 'white',
                 fontSize: '22px',
                 cursor: 'pointer',
-                padding: 0
+                padding: 0,
+                outline: 'none',
+                WebkitAppearance: 'none',
+                appearance: 'none' as const,
+                lineHeight: 1
               }}
             >
               <X className="w-5 h-5" />
@@ -654,7 +661,7 @@ export const ModernUIWidget = ({ bot, owner }: ModernUIWidgetProps) => {
             }}
           >
             <div style={{ textAlign: 'center', userSelect: 'none', marginBottom: '12px' }}>
-              <div style={{ position: 'relative', width: '72px', height: '72px', margin: '0 auto 8px' }}>
+              <div style={{ position: 'relative', width: '72px', height: '72px', margin: '0 auto 8px', borderRadius: '50%', overflow: 'hidden' }}>
                 <img
                   src={theme.botAvatarUrl || floodLogo}
                   alt="Bot"
