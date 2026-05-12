@@ -534,50 +534,54 @@ export const ModernUIWidget = ({ bot, owner }: ModernUIWidgetProps) => {
         </div>
       )}
 
-      <button
-        onClick={openWidget}
-        style={{
-          position: 'fixed',
-          bottom: '24px',
-          right: '24px',
-          width: '72px',
-          height: '72px',
-          border: 'none',
-          background: 'none',
-          padding: 0,
-          cursor: 'pointer',
-          borderRadius: '50%',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-          zIndex: 999,
-          display: isOpen ? 'none' : 'block'
-        }}
-      >
-        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-          <img
-            src={theme.botAvatarUrl || floodLogo}
-            alt="Chat"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              borderRadius: '50%'
-            }}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              top: '2px',
-              right: '2px',
-              width: '20px',
-              height: '20px',
-              backgroundColor: isBotPaused ? '#999' : '#4CAF50',
-              borderRadius: '50%',
-              animation: isBotPaused ? 'none' : 'pulseGreen 2s infinite',
-              border: '3px solid white'
-            }}
-          />
-        </div>
-      </button>
+      {/* FIX: Conditionally render instead of display:none so the button is fully
+          removed from the DOM when the widget is open. This prevents the invisible
+          fixed-position element from blocking clicks on the rest of the page. */}
+      {!isOpen && (
+        <button
+          onClick={openWidget}
+          style={{
+            position: 'fixed',
+            bottom: '24px',
+            right: '24px',
+            width: '72px',
+            height: '72px',
+            border: 'none',
+            background: 'none',
+            padding: 0,
+            cursor: 'pointer',
+            borderRadius: '50%',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+            zIndex: 999,
+          }}
+        >
+          <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+            <img
+              src={theme.botAvatarUrl || floodLogo}
+              alt="Chat"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                borderRadius: '50%'
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                top: '2px',
+                right: '2px',
+                width: '20px',
+                height: '20px',
+                backgroundColor: isBotPaused ? '#999' : '#4CAF50',
+                borderRadius: '50%',
+                animation: isBotPaused ? 'none' : 'pulseGreen 2s infinite',
+                border: '3px solid white'
+              }}
+            />
+          </div>
+        </button>
+      )}
 
       {isOpen && (
         <div
